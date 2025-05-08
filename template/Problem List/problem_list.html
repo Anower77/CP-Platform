@@ -138,10 +138,19 @@
                             </div>
                             <div class="modal-footer">
                                 <button onclick="copyCode()" class="copy-btn">Copy</button>
+                                <div id="copyNotification" style="display:none; color: rgb(255, 255, 255); margin-top: 10px;">
+                                    ✅ Code copied successfully!
+                                </div>
                             </div>
                         </div>
 
+
                         <style>
+                            #copyNotification {
+                                font-weight: bold;
+                                transition: opacity 0.5s ease;
+                            }
+                            
                             .modal-overlay {
                                 position: fixed;
                                 top: 0;
@@ -234,9 +243,16 @@
                         function copyCode() {
                             const code = document.getElementById('codeContent').textContent;
                             navigator.clipboard.writeText(code).then(() => {
-                                 alert("Code copied!");
+                                const notification = document.getElementById('copyNotification');
+                                notification.style.display = 'block';
+                        
+                                // Hide the notification after 2 seconds
+                                setTimeout(() => {
+                                    notification.style.display = 'none';
+                                }, 2000);
                             });
                         }
+                        
 
                         function loadCode(problemId) {
                             console.log("Loading code for ID:", problemId);  // Add this
