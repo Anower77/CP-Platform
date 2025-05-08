@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Problem List !!</h1>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Status</th> <!-- New -->
+                    <th>Star</th>
+                    <th>Problem</th>
+                    <th>Editorials</th>
+                    <th>Video</th>
+                    <th>Code</th>
+                    <th>Timer</th>
+                    <th>AC</th>
+                    <th>Source</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for problem in problems %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+    
+                    <!-- New Status Dropdown -->
+                    <td>
+                        <form method="POST" action="{% url 'update_status' problem.id %}">
+                            {% csrf_token %}
+                            <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                {% for key, value in problem.STATUS_CHOICES %}
+                                    <option value="{{ key }}" {% if key == problem.status %}selected{% endif %}>
+                                        {{ value }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </td>
+    
+                    <td>
+                        <form action="{% url 'toggle_bookmark' problem.id %}" method="POST" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" style="background: none; border: none; color: gold; font-size: 20px; cursor: pointer;">
+                                {% if user in problem.bookmarked_by.all %}
+                                    ★
+                                {% else %}
+                                    ☆
+                                {% endif %}
+                            </button>
+                        </form>
+                    </td>
+    
+                    <td>
+                        <a href="{% url 'problem_detail' problem.id %}" style="text-decoration: none; color: inherit;">
+                            {{ problem.title }}
+                        </a>
+                    </td>
+    
+                    <td>
+                        {% if problem.editorial_link %}
+                            <a href="{{ problem.editorial_link }}" target="_blank">Editorial</a>
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+    
+                    <td>
+                        {% if problem.video_link %}
+                            <a href="{{ problem.video_link }}" target="_blank">Video</a>
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+    
+                    <td>{{ problem.timer }} min</td>
+                    <td>{{ problem.ac_rate }}%</td>
+                    <td>{{ problem.source }}</td>
+                </tr>
+    
+                {% empty %}
+                <tr>
+                    <td colspan="10">No problems available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+{% endblock content %}

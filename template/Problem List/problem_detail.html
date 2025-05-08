@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1>{{ problem.title }}</h1>
+    <p>Editorial: <a href="{{ problem.editorial_link }}" target="_blank">{{ problem.editorial_link }}</a></p>
+    <p>Video: <a href="{{ problem.video_link }}" target="_blank">{{ problem.video_link }}</a></p>
+    <p>Code: <a href="{{ problem.code_link }}" target="_blank">{{ problem.code_link }}</a></p>
+    <p>Timer: {{ problem.timer }} minutes</p>
+    <p>AC Rate: {{ problem.ac_rate }}%</p>
+    <p>Source: {{ problem.source }}</p>
+</div>
+{% endblock %}
