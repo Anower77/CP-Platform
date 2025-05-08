@@ -23,4 +23,5 @@ urlpatterns = [
     path('problem_list/', include("problem_list.urls")),
     path('authentication/', include("authentication.urls")),
     path('contest/', include("contest.urls")),
+    path('profiles/', include("profiles.urls")),
 ]

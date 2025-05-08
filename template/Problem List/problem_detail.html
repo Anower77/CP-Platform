@@ -3,6 +3,8 @@
 {% block content %}
 <div class="container mt-5">
     <h1>{{ problem.title }}</h1>
+    <!-- <p>Problem: <a href="{{ problem.title }}" target="_blank">{{ problem.title }}</a></p> -->
+    <p>Problem: <a href="{{ problem.external_url }}" target="_blank">{{ problem.title }}</a></p>
     <p>Editorial: <a href="{{ problem.editorial_link }}" target="_blank">{{ problem.editorial_link }}</a></p>
     <p>Video: <a href="{{ problem.video_link }}" target="_blank">{{ problem.video_link }}</a></p>
     <p>Code: <a href="{{ problem.code_link }}" target="_blank">{{ problem.code_link }}</a></p>

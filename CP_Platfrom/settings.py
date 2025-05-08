@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'problem_list',
     'authentication',
     'contest',
+    'profiles',
 ]
 
 MIDDLEWARE = [

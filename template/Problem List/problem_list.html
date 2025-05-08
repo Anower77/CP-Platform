@@ -8,7 +8,7 @@
             <thead class="table-dark">
                 <tr>
                     <th>#</th>
-                    <th>Status</th> <!-- New -->
+                    <th>Status</th>
                     <th>Star</th>
                     <th>Problem</th>
                     <th>Editorials</th>
@@ -41,7 +41,7 @@
                     <td>
                         <form action="{% url 'toggle_bookmark' problem.id %}" method="POST" style="display: inline;">
                             {% csrf_token %}
-                            <button type="submit" style="background: none; border: none; color: gold; font-size: 20px; cursor: pointer;">
+                            <button type="submit" style="background: none; border: none; color: rgb(0, 0, 0); font-size: 20px; cursor: pointer;">
                                 {% if user in problem.bookmarked_by.all %}
                                     ★
                                 {% else %}
@@ -50,13 +50,14 @@
                             </button>
                         </form>
                     </td>
-    
                     <td>
-                        <a href="{% url 'problem_detail' problem.id %}" style="text-decoration: none; color: inherit;">
-                            {{ problem.title }}
-                        </a>
+                        {% if problem.is_external %}
+                            <a href="{{ problem.external_url }}" target="_blank">{{ problem.title }}</a>
+                        {% else %}
+                            <a href="{% url 'problem_detail' problem.id %}">{{ problem.title }}</a>
+                        {% endif %}
                     </td>
-    
+                    
                     <td>
                         {% if problem.editorial_link %}
                             <a href="{{ problem.editorial_link }}" target="_blank">Editorial</a>
@@ -67,12 +68,216 @@
     
                     <td>
                         {% if problem.video_link %}
-                            <a href="{{ problem.video_link }}" target="_blank">Video</a>
-                        {% else %}
+                            <!-- <a href="{{ problem.video_link }}" target="_blank">Video</a> -->
+                            <!-- <a href="#" onclick="showCodeModal(`{{ problem.video_link }}`)">Video</a> -->
+                            <!-- <a href="#" onclick="loadVideo('{{ problem.id }}')">Video</a> -->
+                            <a href="#" onclick="showVideoModal(`{{ problem.video_link }}`)">Video</a>
+
+                            <!-- Modal for video -->
+                            <div id="videoModalOverlay" class="modal-overlay" onclick="closeVideoModal()" style="display: none;"></div>
+                            <div id="videoModal" class="video-modal" style="display: none;">
+                                <div class="modal-header">
+                                    <span>Video Class</span>
+                                    <button onclick="closeVideoModal()" class="close-btn">&times;</button>
+                                </div>
+                                <div id="videoContent" style="text-align: center;"></div>
+                            </div>
+
+
+
+                            <style>
+                                .modal-header {
+                                    background-color: #333;
+                                    color: white;
+                                    padding: 10px;
+                                    display: flex;
+                                    justify-content: space-between;
+                                    align-items: center;
+                                }
+                                .video-modal {
+                                    position: fixed;
+                                    top: 50%;
+                                    left: 50%;
+                                    transform: translate(-50%, -50%);
+                                    width: 900px;
+                                    max-height: 100%;
+                                    border-radius: 8px;
+                                    padding: 20px;
+                                    z-index: 1001;
+                                    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+                                }
+                                .video-modal video {
+                                    width: 100%;
+                                    height: auto;
+                                    border-radius: 6px;
+                                }                                
+                            </style>
+
+                            {% else %}
                             N/A
                         {% endif %}
                     </td>
-    
+                    <td>
+                        <a href="#" onclick="showCodeModal(`{{ problem.code|escapejs }}`)">Code</a>
+                        <!-- <a href="#" onclick="loadCode('{{ problem.id|escapejs }}')">Code</a> -->
+                        <!-- <a href="#" onclick="loadCode('{{ problem.id }}')">Code</a> -->
+                        <!-- <a href="#" onclick="loadCode('3')">Code</a> -->
+
+
+                        <!-- Modal Background -->
+                        <div id="codeModalOverlay" class="modal-overlay" onclick="closeCodeModal()" style="display: none;"></div>
+
+                        <!-- Code Modal -->
+                        <div id="codeModal" class="code-modal" style="display: none;">
+                            <div class="modal-header">
+                                <h2>Code Preview</h2>
+                                <button onclick="closeCodeModal()" class="close-btn">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <pre><code id="codeContent" class="language-cpp"></code></pre>
+                            </div>
+                            <div class="modal-footer">
+                                <button onclick="copyCode()" class="copy-btn">Copy</button>
+                            </div>
+                        </div>
+
+                        <style>
+                            .modal-overlay {
+                                position: fixed;
+                                top: 0;
+                                left: 0;
+                                width: 100%;
+                                height: 100%;
+                                background: rgba(0,0,0,0.5);
+                                z-index: 1000;
+                            }
+                        
+                            .code-modal {
+                                position: fixed;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                                width: 90%;
+                                max-width: 800px;
+                                background-color: #2d2d2d;
+                                color: #f1f1f1;
+                                border-radius: 10px;
+                                overflow: hidden;
+                                z-index: 1001;
+                                box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+                            }
+                        
+                            .modal-header, .modal-footer {
+                                padding: 15px 20px;
+                                background-color: #1e1e1e;
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                            }
+                        
+                            .modal-body {
+                                padding: 20px;
+                                overflow-x: auto;
+                                background-color: #1f1f1f;
+                                text-align: left;
+                            }
+                        
+                            .modal-header h2 {
+                                margin: 0;
+                                font-size: 1.2rem;
+                            }
+                        
+                            .close-btn {
+                                background: none;
+                                border: none;
+                                color: white;
+                                font-size: 1.5rem;
+                                cursor: pointer;
+                            }
+                        
+                            .copy-btn {
+                                background-color: #444;
+                                color: white;
+                                border: none;
+                                padding: 8px 16px;
+                                border-radius: 4px;
+                                cursor: pointer;
+                                font-size: 0.95rem;
+                            }
+                        
+                            pre {
+                                margin: 0;
+                                white-space: pre-wrap;
+                                word-wrap: break-word;
+                            }
+                        </style>
+                        
+                    </td>
+
+                    <!-- Then move script BELOW [Code - Segment] JS - Code-->
+                    <script>
+                        const videoId = getYouTubeID(data.video_url);  // full URL from backend
+                        
+                        // For Code
+                        function showCodeModal(code) {
+                            document.getElementById('codeContent').textContent = code;
+                            hljs.highlightElement(document.getElementById('codeContent'));
+                            document.getElementById('codeModalOverlay').style.display = 'block';
+                            document.getElementById('codeModal').style.display = 'block';
+                        }
+
+                        function closeCodeModal() {
+                            document.getElementById('codeModalOverlay').style.display = 'none';
+                            document.getElementById('codeModal').style.display = 'none';
+                        }
+
+                        function copyCode() {
+                            const code = document.getElementById('codeContent').textContent;
+                            navigator.clipboard.writeText(code).then(() => {
+                                 alert("Code copied!");
+                            });
+                        }
+
+                        function loadCode(problemId) {
+                            console.log("Loading code for ID:", problemId);  // Add this
+                            fetch(`/get-code/${problemId}/`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log(data);  // Add this
+                                    showCodeModal(data.code);
+                                });
+                        }
+                        
+                        // For Video
+                        function getYouTubeID(url) {
+                            const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})/;
+                            const match = url.match(regex);
+                            return match ? match[1] : null;
+                        }
+
+                        
+
+                        function showVideoModal(videoUrl) {
+                            const videoId = getYouTubeID(videoUrl);
+                            if (videoId) {
+                                const iframe = `<iframe width="100%" height="400" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                                document.getElementById('videoContent').innerHTML = iframe;
+                                document.getElementById('videoModalOverlay').style.display = 'block';
+                                document.getElementById('videoModal').style.display = 'block';
+                            } else {
+                                alert("Invalid YouTube URL");
+                            }
+                        }
+                        
+                        function closeVideoModal() {
+                            document.getElementById('videoModalOverlay').style.display = 'none';
+                            document.getElementById('videoModal').style.display = 'none';
+                            document.getElementById('videoContent').innerHTML = '';  // Clear iframe to stop video
+                        }
+                        
+                    </script>
+
+                    
                     <td>{{ problem.timer }} min</td>
                     <td>{{ problem.ac_rate }}%</td>
                     <td>{{ problem.source }}</td>

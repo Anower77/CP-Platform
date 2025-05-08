@@ -12,10 +12,10 @@ class Problem(models.Model):
     ]
 
     bookmarked_by = models.ManyToManyField(User, related_name='bookmarked_problems', blank=True)
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, unique=True)
     editorial_link = models.URLField(blank=True, null=True)
     video_link = models.URLField(blank=True, null=True)
-    code_link = models.URLField(blank=True, null=True)
+    code = models.TextField()
     timer = models.IntegerField(default=0)
     ac_rate = models.FloatField(default=0.0)
     source = models.CharField(max_length=255, blank=True, null=True)
@@ -23,5 +23,9 @@ class Problem(models.Model):
     
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='not_started')
 
+    # bookmarked_by = models.ManyToManyField('auth.User', blank=True)
+    is_external = models.BooleanField(default=False)
+    external_url = models.URLField(blank=True, null=True) 
+    
     def __str__(self):
         return self.title
