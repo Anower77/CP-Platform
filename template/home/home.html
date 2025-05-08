@@ -3,14 +3,33 @@
 
 <div class="container mt-5">
     <div class="text-center">
-        <h1 class="mb-4">Welcome to the CP Platform</h1>
+        <h1 class="mb-4">Welcome to the Complex Planet !!</h1>
         <p class="lead">Sharpen your problem-solving skills with real-time challenges and curated problems.</p>
-        <p class="lead">Sharpen your problem-solving skills with real-time challenges and curated problems.</p>
-        <p class="lead">Sharpen your problem-solving skills with real-time challenges and curated problems.</p>
-        <p class="lead">Sharpen your problem-solving skills with real-time challenges and curated problems.</p>
-        <p class="lead">Sharpen your problem-solving skills with real-time challenges and curated problems.</p>
-        <!-- <a href="#" class="btn btn-primary btn-lg mt-3">Start Practicing</a> -->
+    </div>
+
+    <div class="mt-4">
+        <pre id="codeContent" class="bg-dark text-light p-3 rounded">
+def greet(name):
+    return f"Hello, {name}!"
+        </pre>
+        <button class="btn btn-secondary mt-2" onclick="copyCode()">Copy Code</button>
+        <div id="copyNotification" class="text-dark mt-2" style="display:none;">
+            ✅ Code copied successfully!
+        </div>
     </div>
 </div>
+
+<script>
+    function copyCode() {
+        const code = document.getElementById('codeContent').textContent;
+        navigator.clipboard.writeText(code).then(() => {
+            const notification = document.getElementById('copyNotification');
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 2000);
+        });
+    }
+</script>
 
 {% endblock content %}
