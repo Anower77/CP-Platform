@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'authentication',
     'contest',
     'profiles',
+    'dashboard',
 ]
 
 MIDDLEWARE = [

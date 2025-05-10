@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Problem Status !!</h1>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>Bookmarked</th>
+                    <th>Reading</th>
+                    <th>Practicing</th>
+                    <th>Complete</th>
+                    <th>Skipped</th>
+                    <th>Ignored</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ status_data.bookmarked|default:0 }}</td>
+                    <td>{{ status_data.reading|default:0 }}</td>
+                    <td>{{ status_data.practicing|default:0 }}</td>
+                    <td>{{ status_data.complete|default:0 }}</td>
+                    <td>{{ status_data.skipped|default:0 }}</td>
+                    <td>{{ status_data.ignored|default:0 }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+
+{% endblock content %}
+
+
+
