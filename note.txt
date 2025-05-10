@@ -1,0 +1,16 @@
+dashboad update (problem)
+=========================
+when user select status option like pick a "skipped" then update skipped-1
+then another time same problem update status like pick "complete" then that time skipped decricess and update complete-1
+also in future update status that time re-sort dashboad update status option
+
+
+bookmark (problem) 
+---------------------
+when user press star that time use get a notified.
+
+----------
+this are problem fix it 
+----------
+
+

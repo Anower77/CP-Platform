@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import ProblemStatus
 
-# Register your models here.
+admin.site.register(ProblemStatus)
+    

@@ -8,6 +8,8 @@ urlpatterns = [
     path('problem/<int:problem_id>/update_status/', views.update_status, name='update_status'),
     path('get-code/<int:problem_id>/', views.get_code, name='get_code'),
     path('get-video/<int:problem_id>/', views.get_video, name='get_video'),
+    path('update_status/<int:problem_id>/', views.update_status, name='update_status'),
+    path('problem/<int:problem_id>/', views.problem_detail, name='problem_detail'),
 
     # path('get-code/<int:pk>/', views.get_code, name='get_code'),
 

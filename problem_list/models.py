@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Problem(models.Model):
     STATUS_CHOICES = [
         ('not_started', 'Not Started'),
@@ -29,3 +30,25 @@ class Problem(models.Model):
     
     def __str__(self):
         return self.title
+
+
+# status per use
+class ProblemStatus(models.Model):
+    STATUS_CHOICES = [
+        ('not_started', 'Not Started'),
+        ('reading', 'Reading'),
+        ('practicing', 'Practicing'),
+        ('complete', 'Complete'),
+        ('skipped', 'Skipped'),
+        ('ignored', 'Ignored'),
+    ]
+
+    # user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='problem_list_problem_statuses')
+    problem = models.ForeignKey(Problem, on_delete=models.CASCADE, related_name='problem_list_problem_statuses')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='not_started')
+    bookmarked = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ['user', 'problem']

@@ -26,7 +26,7 @@
     
                     <!-- New Status Dropdown -->
                     <td>
-                        <form method="POST" action="{% url 'update_status' problem.id %}">
+                        <!-- <form method="POST" action="{% url 'update_status' problem.id %}">
                             {% csrf_token %}
                             <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
                                 {% for key, value in problem.STATUS_CHOICES %}
@@ -35,7 +35,21 @@
                                     </option>
                                 {% endfor %}
                             </select>
+                        </form> -->
+                       <!-- templates/problem_list/problem_list.html -->
+                       <form method="POST" action="{% url 'update_status' problem.id %}" class="status-form">
+                        {% csrf_token %}
+                            <select name="status" class="status-select" onchange="this.form.submit()" data-problem-id="{{ problem.id }}">
+                                <option value="not_started" {% if problem.status == 'not_started' %}selected{% endif %}>Not Started</option>
+                                <option value="reading" {% if problem.status == 'reading' %}selected{% endif %}>Reading</option>
+                                <option value="practicing" {% if problem.status == 'practicing' %}selected{% endif %}>Practicing</option>
+                                <option value="complete" {% if problem.status == 'complete' %}selected{% endif %}>Complete</option>
+                                <option value="skipped" {% if problem.status == 'skipped' %}selected{% endif %}>Skipped</option>
+                                <option value="ignored" {% if problem.status == 'ignored' %}selected{% endif %}>Ignored</option>
+                            </select>
                         </form>
+                    
+                    
                     </td>
     
                     <td>
@@ -143,6 +157,74 @@
 
 
                         <style>
+                            /* notification */
+                            .bottom-toast {
+                                position: fixed;
+                                bottom: 30px;
+                                left: 50%;
+                                transform: translateX(-50%);
+                                z-index: 9999;
+                            }
+                              
+                            .toast-message {
+                                background-color: #d4edda;
+                                color: #155724;
+                                border: 1px solid #c3e6cb;
+                                padding: 12px 24px;
+                                border-radius: 8px;
+                                font-weight: bold;
+                                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+                                animation: fadeout 4s ease-out forwards;
+                            }
+                              
+                            /* Optional: fade out after 4 seconds */
+                            @keyframes fadeout {
+                                0% { opacity: 1; }
+                                80% { opacity: 1; }
+                                100% { opacity: 0; }
+                            }
+                              
+                            /* notification end */
+                            
+                            /* select status */
+                            .status-select {
+                                padding: 6px 10px;
+                                border-radius: 6px;
+                                font-weight: bold;
+                            }
+                            
+                            .status-select option[value="not_started"] {
+                                background-color: #e0e0e0;
+                                color: #000;
+                            }
+                            
+                            .status-select option[value="reading"] {
+                                background-color: #fffae6;
+                                color: #b58900;
+                            }
+                            
+                            .status-select option[value="practicing"] {
+                                background-color: #e6f7ff;
+                                color: #007acc;
+                            }
+                            
+                            .status-select option[value="complete"] {
+                                background-color: #e6ffed;
+                                color: #2e7d32;
+                            }
+                            
+                            .status-select option[value="skipped"] {
+                                background-color: #fff3cd;
+                                color: #856404;
+                            }
+                            
+                            .status-select option[value="ignored"] {
+                                background-color: #f8d7da;
+                                color: #721c24;
+                            }
+                            /* end select status */
+                            
+
                             #copyNotification {
                                 font-weight: bold;
                                 transition: opacity 0.5s ease;
@@ -304,6 +386,14 @@
             </tbody>
         </table>
     </div>
-    
+    {% if messages %}
+        <div class="bottom-toast">
+            {% for message in messages %}
+            <div class="toast-message {{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 </div>
 {% endblock content %}
