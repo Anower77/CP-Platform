@@ -4,8 +4,18 @@
 <div class="container mt-4">
     <h1 class="text-center mb-4">Problem List !!</h1>
     <div class="table-responsive">
+        <!-- search bar  -->
+        <div class="d-flex justify-content-end mb-3 text-white p-2 rounded">
+            <form class="form-inline d-flex mb-3" method="get" action="">
+                <input class="form-control me-2" type="search" placeholder="Search" name="q" value="{{ request.GET.q }}">
+                <button class="btn bg-dark text-white btn-outline-dark" type="submit">Search</button>
+            </form>
+
+        </div>
+        <br>
+
         <table class="table table-bordered table-striped text-center">
-            <thead class="table-dark">
+            <thead class="table-secondary">
                 <tr>
                     <th>#</th>
                     <th>Status</th>
@@ -14,7 +24,7 @@
                     <th>Editorials</th>
                     <th>Video</th>
                     <th>Code</th>
-                    <th>Timer</th>
+                    <th>Rating</th>
                     <th>AC</th>
                     <th>Source</th>
                 </tr>
@@ -26,31 +36,30 @@
     
                     <!-- New Status Dropdown -->
                     <td>
-                        <!-- <form method="POST" action="{% url 'update_status' problem.id %}">
+                      
+                        <form method="POST" action="{% url 'update_status' problem.id %}" class="">
                             {% csrf_token %}
-                            <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
-                                {% for key, value in problem.STATUS_CHOICES %}
-                                    <option value="{{ key }}" {% if key == problem.status %}selected{% endif %}>
-                                        {{ value }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </form> -->
-                       <!-- templates/problem_list/problem_list.html -->
-                       <form method="POST" action="{% url 'update_status' problem.id %}" class="status-form">
-                        {% csrf_token %}
-                            <select name="status" class="status-select" onchange="this.form.submit()" data-problem-id="{{ problem.id }}">
-                                <option value="not_started" {% if problem.status == 'not_started' %}selected{% endif %}>Not Started</option>
-                                <option value="reading" {% if problem.status == 'reading' %}selected{% endif %}>Reading</option>
-                                <option value="practicing" {% if problem.status == 'practicing' %}selected{% endif %}>Practicing</option>
-                                <option value="complete" {% if problem.status == 'complete' %}selected{% endif %}>Complete</option>
-                                <option value="skipped" {% if problem.status == 'skipped' %}selected{% endif %}>Skipped</option>
-                                <option value="ignored" {% if problem.status == 'ignored' %}selected{% endif %}>Ignored</option>
-                            </select>
+                            <!-- <input type="hidden" name="status" value="{{ problem.status }}" id="status-input-{{ problem.id }}"> -->
+                            <input type="hidden" name="status" value="{{ problem.user_status }}" id="status-input-{{ problem.id }}">
+
+                            <div class="status-dropdown" data-problem-id="{{ problem.id }}">
+                                <button type="button" class="dropdown-btn" onclick="toggleDropdown(this)">
+                                    <span class="status-icon {{ problem.user_status }}"></span>
+                                    {{ problem.user_status|title }}
+                                </button>
+
+
+                                <div class="status-options">
+                                    <div onclick="selectStatus('{{ problem.id }}', 'not_started')"><span class="status-icon not_started"></span>Not Started</div>
+                                    <!-- <div onclick="selectStatus('{{ problem.id }}', 'not_started')"><span class="status-icon {{ problem.status|default:'not_started' }}"></span>{{ problem.status|default:'not_started'|title }}Not Started</div>  -->
+                                    <div onclick="selectStatus('{{ problem.id }}', 'reading')"><span class="status-icon reading"></span>Reading</div>
+                                    <div onclick="selectStatus('{{ problem.id }}', 'practicing')"><span class="status-icon practicing"></span>Practicing</div>
+                                    <div onclick="selectStatus('{{ problem.id }}', 'complete')"><span class="status-icon complete"></span>Complete</div>
+                                    <div onclick="selectStatus('{{ problem.id }}', 'skipped')"><span class="status-icon skipped"></span>Skipped</div>
+                                    <div onclick="selectStatus('{{ problem.id }}', 'ignored')"><span class="status-icon ignored"></span>Ignored</div>
+                                </div>
+                            </div>
                         </form>
-                    
-                    
-                    </td>
     
                     <td>
                         <form action="{% url 'toggle_bookmark' problem.id %}" method="POST" style="display: inline;">
@@ -82,10 +91,8 @@
     
                     <td>
                         {% if problem.video_link %}
-                            <!-- <a href="{{ problem.video_link }}" target="_blank">Video</a> -->
-                            <!-- <a href="#" onclick="showCodeModal(`{{ problem.video_link }}`)">Video</a> -->
-                            <!-- <a href="#" onclick="loadVideo('{{ problem.id }}')">Video</a> -->
-                            <a href="#" onclick="showVideoModal(`{{ problem.video_link }}`)">Video</a>
+                            <!-- for video -->
+                            <a href="#" onclick="showVideoModal(`{{ problem.video_link }}`)"> <i class="fas fa-video video-icon"></i><!-- for video --> </a>
 
                             <!-- Modal for video -->
                             <div id="videoModalOverlay" class="modal-overlay" onclick="closeVideoModal()" style="display: none;"></div>
@@ -124,7 +131,14 @@
                                     width: 100%;
                                     height: auto;
                                     border-radius: 6px;
-                                }                                
+                                }  
+                                .video-icon {
+                                    font-size: 20px;
+                                    color: #ffffff;
+                                    background-color: #000000;
+                                    padding: 10px;
+                                    border-radius:10%;
+                                }                              
                             </style>
 
                             {% else %}
@@ -132,9 +146,9 @@
                         {% endif %}
                     </td>
                     <td>
-                        <a href="#" onclick="showCodeModal(`{{ problem.code|escapejs }}`)">Code</a>
+                        <!-- Code Button -->
+                        <a href="#" onclick="showCodeModal(`{{ problem.code|escapejs }}`)"><i class="fas fa-code copy-icon"></i><!-- Code Button --></a>
                  
-
                         <!-- Modal Background -->
                         <div id="codeModalOverlay" class="modal-overlay" onclick="closeCodeModal()" style="display: none;"></div>
 
@@ -154,159 +168,193 @@
                                 </div>
                             </div>
                         </div>
-
-
-                        <style>
-                            /* notification */
-                            .bottom-toast {
-                                position: fixed;
-                                bottom: 30px;
-                                left: 50%;
-                                transform: translateX(-50%);
-                                z-index: 9999;
-                            }
-                              
-                            .toast-message {
-                                background-color: #d4edda;
-                                color: #155724;
-                                border: 1px solid #c3e6cb;
-                                padding: 12px 24px;
-                                border-radius: 8px;
-                                font-weight: bold;
-                                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-                                animation: fadeout 4s ease-out forwards;
-                            }
-                              
-                            /* Optional: fade out after 4 seconds */
-                            @keyframes fadeout {
-                                0% { opacity: 1; }
-                                80% { opacity: 1; }
-                                100% { opacity: 0; }
-                            }
-                              
-                            /* notification end */
-                            
-                            /* select status */
-                            .status-select {
-                                padding: 6px 10px;
-                                border-radius: 6px;
-                                font-weight: bold;
-                            }
-                            
-                            .status-select option[value="not_started"] {
-                                background-color: #e0e0e0;
-                                color: #000;
-                            }
-                            
-                            .status-select option[value="reading"] {
-                                background-color: #fffae6;
-                                color: #b58900;
-                            }
-                            
-                            .status-select option[value="practicing"] {
-                                background-color: #e6f7ff;
-                                color: #007acc;
-                            }
-                            
-                            .status-select option[value="complete"] {
-                                background-color: #e6ffed;
-                                color: #2e7d32;
-                            }
-                            
-                            .status-select option[value="skipped"] {
-                                background-color: #fff3cd;
-                                color: #856404;
-                            }
-                            
-                            .status-select option[value="ignored"] {
-                                background-color: #f8d7da;
-                                color: #721c24;
-                            }
-                            /* end select status */
-                            
-
-                            #copyNotification {
-                                font-weight: bold;
-                                transition: opacity 0.5s ease;
-                            }
-                            
-                            .modal-overlay {
-                                position: fixed;
-                                top: 0;
-                                left: 0;
-                                width: 100%;
-                                height: 100%;
-                                background: rgba(0,0,0,0.5);
-                                z-index: 1000;
-                            }
-                        
-                            .code-modal {
-                                position: fixed;
-                                top: 50%;
-                                left: 50%;
-                                transform: translate(-50%, -50%);
-                                width: 90%;
-                                max-width: 800px;
-                                background-color: #2d2d2d;
-                                color: #f1f1f1;
-                                border-radius: 10px;
-                                overflow: hidden;
-                                z-index: 1001;
-                                box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
-                            }
-                        
-                            .modal-header, .modal-footer {
-                                padding: 15px 20px;
-                                background-color: #1e1e1e;
-                                display: flex;
-                                justify-content: space-between;
-                                align-items: center;
-                            }
-                        
-                            .modal-body {
-                                padding: 20px;
-                                overflow-x: auto;
-                                background-color: #1f1f1f;
-                                text-align: left;
-                            }
-                        
-                            .modal-header h2 {
-                                margin: 0;
-                                font-size: 1.2rem;
-                            }
-                        
-                            .close-btn {
-                                background: none;
-                                border: none;
-                                color: white;
-                                font-size: 1.5rem;
-                                cursor: pointer;
-                            }
-                        
-                            .copy-btn {
-                                background-color: #444;
-                                color: white;
-                                border: none;
-                                padding: 8px 16px;
-                                border-radius: 4px;
-                                cursor: pointer;
-                                font-size: 0.95rem;
-                            }
-                        
-                            pre {
-                                margin: 0;
-                                white-space: pre-wrap;
-                                word-wrap: break-word;
-                            }
-                        </style>
-                        
                     </td>
+
+                    <!-- style for notification (Toast) -->
+                    <style>
+                        /* notification */
+                        .bottom-toast {
+                            position: fixed;
+                            bottom: 30px;
+                            left: 50%;
+                            transform: translateX(-50%);
+                            z-index: 9999;
+                        }
+                            
+                        .toast-message {
+                            background-color: #d4edda;
+                            color: #155724;
+                            border: 1px solid #c3e6cb;
+                            padding: 12px 24px;
+                            border-radius: 8px;
+                            font-weight: bold;
+                            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+                            animation: fadeout 4s ease-out forwards;
+                        }
+                            
+                        /* Optional: fade out after 4 seconds */
+                        @keyframes fadeout {
+                            0% { opacity: 1; }
+                            80% { opacity: 1; }
+                            100% { opacity: 0; }
+                        }
+                            
+                        /* notification end */
+                        
+                        /* select status */
+                            .status-dropdown {
+                            display: inline-block;
+                            font-family: 'Segoe UI', sans-serif;
+                        }
+
+                        .status-dropdown .dropdown-btn {
+                            background-color: #0b0b1f;
+                            color: white;
+                            padding: 8px 12px;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                            width: 160px;
+                            text-align: left;
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                        }
+
+                        .status-dropdown .dropdown-btn::after {
+                            content: "▼";
+                            margin-left: auto;
+                            font-size: 10px;
+                            color: #ccc;
+                        }
+
+                        .status-options {
+                            display: none;
+                            position: absolute;
+                            background-color: #2c2c3b;
+                            min-width: 180px;
+                            border-radius: 6px;
+                            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                            z-index: 1000;
+                            margin-top: 5px;
+                        }
+
+                        .status-options div {
+                            padding: 10px 14px;
+                            cursor: pointer;
+                            color: #fff;
+                            display: flex;
+                            align-items: center;
+                            gap: 10px;
+                        }
+
+                        .status-options div:hover {
+                            background-color: #3a3a4a;
+                        }
+
+                        .status-icon {
+                            width: 12px;
+                            height: 12px;
+                            border-radius: 50%;
+                        }
+
+                        .not_started { background-color: rgb(142, 145, 142); }
+                        .reading { background-color: gold; }
+                        .practicing { background-color: #bc49e9; }
+                        .complete { background-color: #2ecc71; }
+                        .skipped { background-color: #3498db; }
+                        .ignored { background-color: #e74c3c; }
+                        /* end select status */
+                        
+
+                        #copyNotification {
+                            font-weight: bold;
+                            transition: opacity 0.5s ease;
+                        }
+                        
+                        .modal-overlay {
+                            position: fixed;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            background: rgba(0,0,0,0.5);
+                            z-index: 1000;
+                        }
+                    
+                        .code-modal {
+                            position: fixed;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            width: 90%;
+                            max-width: 800px;
+                            background-color: #2d2d2d;
+                            color: #000000;
+                            border-radius: 10px;
+                            overflow: hidden;
+                            z-index: 1001;
+                            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+                        }
+                    
+                        .modal-header, .modal-footer {
+                            padding: 15px 20px;
+                            background-color: #1e1e1e;
+                            display: flex;
+                            justify-content: space-between;
+                            align-items: center;
+                        }
+                    
+                        .modal-body {
+                            padding: 20px;
+                            overflow-x: auto;
+                            background-color: #1f1f1f;
+                            text-align: left;
+                        }
+                    
+                        .modal-header h2 {
+                            margin: 0;
+                            font-size: 1.2rem;
+                        }
+                    
+                        .close-btn {
+                            background: none;
+                            border: none;
+                            color: rgb(255, 255, 255);
+                            font-size: 1.5rem;
+                            cursor: pointer;
+                        }
+                    
+                        .copy-btn {
+                            background-color: #444;
+                            color: white;
+                            border: none;
+                            padding: 8px 16px;
+                            border-radius: 4px;
+                            cursor: pointer;
+                            font-size: 0.95rem;
+                        }
+                        
+                        .copy-icon {
+                            font-size: 20px;
+                            color: #ffffff;
+                            background-color: #000000;
+                            padding: 10px;
+                            border-radius:10%;
+                        } 
+                        pre {
+                            margin: 0;
+                            white-space: pre-wrap;
+                            word-wrap: break-word;
+                        }
+                    </style>
+                        
 
                     <!-- Then move script BELOW [Code - Segment] JS - Code-->
                     <script>
                         const videoId = getYouTubeID(data.video_url);  // full URL from backend
                         
-                        // For Code
+                        // For view Code popup
                         function showCodeModal(code) {
                             document.getElementById('codeContent').textContent = code;
                             hljs.highlightElement(document.getElementById('codeContent'));
@@ -318,7 +366,7 @@
                             document.getElementById('codeModalOverlay').style.display = 'none';
                             document.getElementById('codeModal').style.display = 'none';
                         }
-
+                        // For copy code
                         function copyCode() {
                             const code = document.getElementById('codeContent').textContent;
                             navigator.clipboard.writeText(code).then(() => {
@@ -370,11 +418,35 @@
                             document.getElementById('videoContent').innerHTML = '';  // Clear iframe to stop video
                         }
                         
+
+                        // for status
+                        function toggleDropdown(button) {
+                            const dropdown = button.nextElementSibling;
+                            document.querySelectorAll('.status-options').forEach(d => {
+                                if (d !== dropdown) d.style.display = 'none';
+                            });
+                            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+                        }
+
+                        function selectStatus(problemId, status) {
+                            const input = document.getElementById(`status-input-${problemId}`);
+                            input.value = status;
+
+                            const form = input.closest('form');
+                            form.submit();
+                        }
+
+                        window.addEventListener('click', function (e) {
+                            if (!e.target.closest('.status-dropdown')) {
+                                document.querySelectorAll('.status-options').forEach(d => d.style.display = 'none');
+                            }
+                        });
                     </script>
 
                     
-                    <td>{{ problem.timer }} min</td>
-                    <td>{{ problem.ac_rate }}%</td>
+                    <td>{{ problem.rating }}</td>
+                    <td>{{ problem.complete_count }}</td>
+                    <!-- <td>{{ problem.ac_rate }}</td> -->
                     <td>{{ problem.source }}</td>
                 </tr>
     
@@ -386,6 +458,8 @@
             </tbody>
         </table>
     </div>
+
+    <!-- for notification (Toast) -->
     {% if messages %}
         <div class="bottom-toast">
             {% for message in messages %}

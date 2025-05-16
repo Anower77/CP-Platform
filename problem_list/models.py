@@ -12,19 +12,22 @@ class Problem(models.Model):
         ('ignored', 'Ignored'),
     ]
 
-    bookmarked_by = models.ManyToManyField(User, related_name='bookmarked_problems', blank=True)
+    bookmarked_by = models.ManyToManyField(
+        User,
+        through='dashboard.Bookmark',
+        related_name='bookmarked_problems',
+        blank=True
+    )
+
     title = models.CharField(max_length=255, unique=True)
     editorial_link = models.URLField(blank=True, null=True)
     video_link = models.URLField(blank=True, null=True)
     code = models.TextField()
-    timer = models.IntegerField(default=0)
-    ac_rate = models.FloatField(default=0.0)
+    rating = models.IntegerField(default=800)
+    ac_rate = models.BooleanField(default=False)
     source = models.CharField(max_length=255, blank=True, null=True)
     starred = models.BooleanField(default=False)
-    
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='not_started')
-
-    # bookmarked_by = models.ManyToManyField('auth.User', blank=True)
     is_external = models.BooleanField(default=False)
     external_url = models.URLField(blank=True, null=True) 
     
@@ -43,8 +46,6 @@ class ProblemStatus(models.Model):
         ('ignored', 'Ignored'),
     ]
 
-    # user = models.ForeignKey(User, on_delete=models.CASCADE)
-    # problem = models.ForeignKey(Problem, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='problem_list_problem_statuses')
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE, related_name='problem_list_problem_statuses')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='not_started')
@@ -52,3 +53,4 @@ class ProblemStatus(models.Model):
 
     class Meta:
         unique_together = ['user', 'problem']
+

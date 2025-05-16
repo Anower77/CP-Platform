@@ -1,0 +1,162 @@
+:root {
+    --dark-bg: #1a1a1a;
+    --dark-card: #2d2d2d;
+    --dark-text: #ffffff;
+    --dark-text-muted: #a0a0a0;
+    --dark-border: #404040;
+    --dark-primary: #007bff;
+    --dark-danger: #dc3545;
+    --dark-success: #28a745;
+    --dark-warning: #ffc107;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+}
+
+/* Card Styles */
+.card {
+    background-color: var(--dark-card);
+    border-color: var(--dark-border);
+}
+
+.card-header {
+    background-color: var(--dark-card);
+    border-bottom-color: var(--dark-border);
+}
+
+/* Table Styles */
+.table {
+    color: var(--dark-text);
+}
+
+.table-bordered {
+    border-color: var(--dark-border);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.table-secondary {
+    background-color: var(--dark-card);
+    color: var(--dark-text);
+}
+
+/* Button Styles */
+.btn {
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--dark-primary);
+    border-color: var(--dark-primary);
+}
+
+.btn-danger {
+    background-color: var(--dark-danger);
+    border-color: var(--dark-danger);
+}
+
+.btn-outline-primary {
+    color: var(--dark-primary);
+    border-color: var(--dark-primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--dark-primary);
+    color: var(--dark-text);
+}
+
+/* Form Styles */
+.form-control {
+    background-color: var(--dark-card);
+    border-color: var(--dark-border);
+    color: var(--dark-text);
+}
+
+.form-control:focus {
+    background-color: var(--dark-card);
+    border-color: var(--dark-primary);
+    color: var(--dark-text);
+}
+
+/* List Group Styles */
+.list-group-item {
+    background-color: var(--dark-card);
+    border-color: var(--dark-border);
+    color: var(--dark-text);
+}
+
+/* Links */
+a {
+    color: var(--dark-primary);
+}
+
+a:hover {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+/* Profile Section Specific Styles */
+.profile-section {
+    background-color: var(--dark-card);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.profile-header {
+    border-bottom: 1px solid var(--dark-border);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.profile-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--dark-primary);
+}
+
+.profile-stats {
+    background-color: var(--dark-bg);
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.settings-section {
+    background-color: var(--dark-card);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.settings-section h3 {
+    color: var(--dark-text);
+    border-bottom: 1px solid var(--dark-border);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Alert Messages */
+.alert {
+    background-color: var(--dark-card);
+    border-color: var(--dark-border);
+    color: var(--dark-text);
+}
+
+.alert-success {
+    background-color: rgba(40, 167, 69, 0.2);
+    border-color: var(--dark-success);
+    color: var(--dark-success);
+}
+
+.alert-danger {
+    background-color: rgba(220, 53, 69, 0.2);
+    border-color: var(--dark-danger);
+    color: var(--dark-danger);
+} 
