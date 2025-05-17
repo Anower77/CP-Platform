@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container py-4">
+    <div class="row mb-4">
+        <div class="col text-center">
+            <h1 class="display-4 fw-bold">Topics Visualizer</h1>
+            <p class="lead">Click a topic to explore it visually</p>
+        </div>
+    </div>
+
+    <div class="row" id="topics-container">
+        <!-- Array Topic Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card topic-card h-100 shadow-sm" data-href="{% static 'visualizer/array/index.html' %}">
+                <div class="card-body">
+                    <h5 class="card-title">Array</h5>
+                    <p class="card-text">Understand array through step-by-step animations.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prefix Sum Topic Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card topic-card h-100 shadow-sm" data-href="{% static 'visualizer/PrefixSum/index.html' %}">
+                <div class="card-body">
+                    <h5 class="card-title">Prefix Sum</h5>
+                    <p class="card-text">Understand prefix sums through step-by-step animations.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Binary Search Topic Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card topic-card h-100 shadow-sm" data-href="{% static 'visualizer/BinarySearch/index.html' %}">
+                <div class="card-body">
+                    <h5 class="card-title">Binary Search</h5>
+                    <p class="card-text">See how binary search narrows down a sorted array.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sliding Window Topic Card -->
+        <div class="col-md-4 mb-4">
+            <div class="card topic-card h-100 shadow-sm" data-href="{% static 'visualizer/SlidingWindow/index.html' %}">
+                <div class="card-body">
+                    <h5 class="card-title">Sliding Window</h5>
+                    <p class="card-text">Watch a window dynamically slide over data for maximum efficiency.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.topic-card {
+    border-radius: 10px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+}
+
+.topic-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.topic-card .card-title {
+    color: var(--text-primary);
+    font-weight: bold;
+}
+
+.topic-card .card-text {
+    color: var(--text-secondary);
+}
+
+.lead {
+    color: var(--text-secondary);
+}
+</style>
+
+<script>
+document.querySelectorAll('.topic-card').forEach(card => {
+    card.addEventListener('click', () => {
+        window.location.href = card.dataset.href;
+    });
+});
+</script>
+
+{% endblock %}

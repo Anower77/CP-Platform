@@ -1,0 +1,71 @@
+:root {
+    /* Light Theme (default) */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #e9ecef;
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --border-color: #dee2e6;
+    --card-bg: #ffffff;
+    --card-border: #dee2e6;
+    --btn-primary-bg: #007bff;
+    --btn-primary-hover: #0056b3;
+    --btn-outline-color: #6c757d;
+    --code-bg: #f8f9fa;
+    --array-element-bg: #e9ecef;
+    --array-element-border: #ced4da;
+    --array-element-highlight: #007bff;
+    --array-element-insert: #28a745;
+    --array-element-delete: #dc3545;
+    --array-element-update: #ffc107;
+    --array-element-search: #17a2b8;
+}
+
+[data-theme="dark"] {
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #2d2d2d;
+    --bg-tertiary: #3d3d3d;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --border-color: #444444;
+    --card-bg: #2d2d2d;
+    --card-border: #444444;
+    --btn-primary-bg: #007bff;
+    --btn-primary-hover: #0056b3;
+    --btn-outline-color: #ffffff;
+    --code-bg: #1e1e1e;
+    --array-element-bg: #4a4a4a;
+    --array-element-border: #666666;
+    --array-element-highlight: #007bff;
+    --array-element-insert: #28a745;
+    --array-element-delete: #dc3545;
+    --array-element-update: #ffc107;
+    --array-element-search: #17a2b8;
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+.theme-toggle i {
+    color: var(--text-primary);
+    font-size: 1.2rem;
+} 
